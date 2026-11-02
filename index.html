@@ -75,7 +75,7 @@ body.opened .gate{transform:translateY(-100%)}
 .gate small{font-family:var(--sans);font-size:.72rem;letter-spacing:.14em;color:var(--on-olive-dim);opacity:0;animation:fadeIn 1s ease 1.8s forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes fadeIn{to{opacity:1}}
-.music{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;width:52px;height:52px;border-radius:50%;background:var(--olive-deep);color:var(--on-olive);border:1px solid rgba(246,242,227,.35);display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 30px -12px rgba(20,26,8,.6);transition:transform .2s}
+.music{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;width:52px;height:52px;border-radius:50%;background:var(--olive-deep);color:var(--on-olive);border:1px solid rgba(246,242,227,.35);display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 30px -12px rgba(20,26,8,.6);transition:transform .2s}
 .music:hover{transform:scale(1.06)}
 .music .bars{display:flex;gap:3px;align-items:flex-end;height:18px}
 .music .bars i{display:block;width:3px;height:100%;background:currentColor;border-radius:2px;transform-origin:50% 100%;animation:eq 1s ease-in-out infinite}
@@ -100,6 +100,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .hero-bg{position:absolute;inset:0}
 .hero-bg video{width:100%;height:100%;object-fit:cover}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.28) 45%,rgba(0,0,0,.82) 100%)}
+/* portrait phones: show the film as a wide band at the top instead of a tight crop */
+@media (max-aspect-ratio:1/1){
+  .hero{align-items:end}
+  .hero-bg{bottom:auto;height:auto;aspect-ratio:4/3}
+  .hero-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 35%,rgba(17,17,17,.6) 75%,#111 100%)}
+  .hero .wrap{padding-top:calc(75vw - 40px);padding-bottom:104px}
+  .hero-copy{gap:16px}
+  .hero .names{font-size:clamp(2.8rem,13vw,4.2rem)}
+  .hero .countdown span{font-size:2rem}
+}
 .hero .wrap{position:relative;z-index:1;width:100%;display:grid;justify-items:center;text-align:center;padding-block:clamp(72px,10vw,120px)}
 .hero-copy{display:grid;gap:22px;min-width:0;justify-items:center;max-width:820px}
 .hero .hero-date,.hero .countdown,.hero .hero-ctas{justify-content:center}
