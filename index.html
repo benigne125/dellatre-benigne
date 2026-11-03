@@ -196,6 +196,7 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
 .kids .kcopy{position:absolute;left:0;right:0;bottom:clamp(28px,7vh,72px);text-align:center;display:grid;gap:8px;padding-left:var(--gl);padding-right:var(--gr)}
 .kids .kcopy h2{font-family:var(--display);font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;color:var(--ink)}
 .kids .kcopy p{color:var(--muted);max-width:520px;margin-inline:auto}
+.kids .kcopy .knames{color:var(--olive);font-size:clamp(2rem,5vw,3rem);line-height:1.1}
 .heart{position:absolute;top:50%;left:50%;width:46px;height:46px;margin:-23px 0 0 -23px;color:var(--ink);z-index:3}
 
 /* ---------- story: chapter two (horizontal) ---------- */
@@ -235,7 +236,10 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
   .panel{width:100%;grid-template-columns:1fr;min-height:0}
   .panel .vis{min-height:0;aspect-ratio:4/5}
   .panel .vis.chatv{aspect-ratio:auto;min-height:300px}
-  .stack2{aspect-ratio:1!important}
+  .stack2{aspect-ratio:auto!important;display:flex;align-items:center;justify-content:center;gap:14px;padding:18px 8px}
+  .panel .stack2>img{position:static;inset:auto;width:calc(50% - 7px);height:auto;object-fit:contain}
+  .stack2 img:nth-child(1){transform:rotate(-3deg)}
+  .stack2 img:nth-child(2){transform:rotate(3deg)}
 }
 
 /* ---------- story: film ---------- */
@@ -508,8 +512,8 @@ footer .label{color:var(--on-olive-dim)}
   <div class="pic k2" id="k2"><img src="img/t5.jpg" alt="Childhood photo"></div>
   <svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.8 8.2 3 4.5 6.6 4.5c2.2 0 3.6 1.2 5.4 3.2 1.8-2 3.2-3.2 5.4-3.2 3.6 0 5.8 3.7 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg>
   <div class="kcopy" id="kidsCopy">
-    <h2>Two kids. One church. <span class="sc" style="color:var(--olive)">One choir.</span></h2>
-    <p>Growing up side by side, singing in the same choir, their families sharing a special bond.</p>
+    <h2>These kids are getting married</h2>
+    <p class="knames"><span class="sc">Delattre &amp; Bénigne</span></p>
   </div>
 </section>
 
@@ -547,7 +551,7 @@ footer .label{color:var(--on-olive-dim)}
       </article>
       <article class="panel">
         <div class="txt">
-          <span class="when">Kigali · Nyandungu Eco-Park</span>
+          <span class="when">Bénigne's parents' 25th wedding anniversary</span>
           <div class="yr">2022</div>
           <h3>Nine years later</h3>
           <p>He came home and saw Bénigne for the first time in nine years, at her parents' 25th wedding anniversary. She was no longer his childhood crush. She was the woman he wanted to spend his life with. At Nyandungu Eco-Park he told her <q>I love you</q>, and gave her time.</p>
@@ -556,7 +560,7 @@ footer .label{color:var(--on-olive-dim)}
       </article>
       <article class="panel">
         <div class="txt">
-          <span class="when">Fazendha, then KFC</span>
+          <span class="when">Birthday celebration</span>
           <div class="yr">2023<small>6 January</small></div>
           <h3>She said it back</h3>
           <p>After a wonderful date, Bénigne said the words he had waited years to hear: <q>I love you.</q> His childhood crush became his girlfriend, his best friend and his favourite person.</p>
@@ -606,7 +610,7 @@ footer .label{color:var(--on-olive-dim)}
       <figure class="f3"><img src="img/p46.jpg" alt="Bénigne and Delattre, a selfie" loading="lazy"></figure>
     </div>
     <div class="bride-copy">
-      <p class="rv">Two kids from the same choir. Best friends, each other's favourite person. <span class="sc">Soon, husband and wife.</span></p>
+      <p class="rv">A love that waited, grew and kept its promise, in God's perfect timing. <span class="sc">Forever starts now.</span></p>
       <p class="small rv">What began as an innocent childhood crush became a love stronger than distance and time, built on patience, faith and choosing each other through every season.</p>
     </div>
     <div class="finale rv">
@@ -889,11 +893,13 @@ footer .label{color:var(--on-olive-dim)}
 
   // two kids drift together
   gsap.set('#k1,#k2',{clearProps:'transform'});
-  var kt=gsap.timeline({scrollTrigger:{trigger:'#kids',start:'top top',end:'+=160%',pin:true,scrub:.6}});
-  kt.fromTo('#k1',{x:0,y:0,xPercent:-260,yPercent:-50,rotation:-16},{xPercent:-96,rotation:-5,ease:'power2.out',duration:1},0)
-    .fromTo('#k2',{x:0,y:0,xPercent:160,yPercent:-50,rotation:16},{xPercent:-4,rotation:5,ease:'power2.out',duration:1},0)
-    .fromTo('#heart',{scale:0,opacity:0},{scale:1,opacity:1,ease:'back.out(3)',duration:.3},.85)
-    .from('#kidsCopy',{y:40,opacity:0,duration:.4},.7);
+  var kt=gsap.timeline({scrollTrigger:{trigger:'#kids',start:'top top',end:'+=110%',pin:true,scrub:.6}});
+  kt.fromTo('#k1',{x:0,y:40,xPercent:-96,yPercent:-50,rotation:0,scale:.9,opacity:0},{y:0,rotation:-5,scale:1,opacity:1,ease:'power2.out',duration:.6},0)
+    .fromTo('#k2',{x:0,y:40,xPercent:-4,yPercent:-50,rotation:0,scale:.9,opacity:0},{y:0,rotation:5,scale:1,opacity:1,ease:'power2.out',duration:.6},0)
+    .fromTo('#heart',{scale:0,opacity:0},{scale:1.25,opacity:1,ease:'back.out(3)',duration:.3},.45)
+    .to('#heart',{scale:1,duration:.15},.75)
+    .from('#kidsCopy h2',{y:30,opacity:0,duration:.35},.6)
+    .from('#kidsCopy .knames',{y:20,opacity:0,duration:.35},.8);
 
   // chapter two: sideways on desktop, stacked on phones
   mm.add('(min-width: 861px)',function(){
