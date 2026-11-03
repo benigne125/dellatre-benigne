@@ -295,7 +295,7 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
 .row.rev{animation-direction:reverse;animation-duration:84s}
 .rows:hover .row{animation-play-state:paused}
 @keyframes marq{to{transform:translateX(-50%)}}
-.row button{all:unset;cursor:zoom-in;height:clamp(200px,28vw,330px);border-radius:14px;overflow:hidden;flex:0 0 auto;background:var(--olive-deep)}
+.row button{all:unset;cursor:zoom-in;height:clamp(240px,28vw,330px);border-radius:14px;overflow:hidden;flex:0 0 auto;background:var(--olive-deep)}
 .row button img{height:100%;width:auto;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .row button:hover img{transform:scale(1.05)}
 .row button:focus-visible{outline:2px solid var(--leaf);outline-offset:3px}
@@ -306,6 +306,15 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
 .lb-ui button:hover,.lb-ui button:focus-visible{background:rgba(246,242,227,.14)}
 .lb-cap{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);z-index:152;display:grid;gap:4px;justify-items:center;text-align:center;color:var(--on-olive);padding-left:var(--gl);padding-right:var(--gr);pointer-events:none}
 .lb-cap p{font-family:var(--serif);font-style:italic;font-size:clamp(1.15rem,2.6vw,1.45rem);line-height:1.3;max-width:34ch}
+@media (max-width:600px){
+  .gal{padding-block:56px 48px}
+  .gal .sec-head{margin-bottom:28px}
+  .row{gap:10px;margin-bottom:10px}
+  .row button{height:min(72vw,340px);border-radius:12px}
+  .lb-cap{bottom:calc(env(safe-area-inset-bottom,0px) + 74px)}
+  .lb-cap p{font-size:1.5rem;line-height:1.25}
+  .lb-cap span{font-size:.78rem}
+}
 .lb-cap span{font-family:var(--sans);font-size:.68rem;letter-spacing:.22em;color:var(--on-olive-dim)}
 
 /* ---------- wishes & prayers ---------- */
@@ -625,7 +634,7 @@ footer .label{color:var(--on-olive-dim)}
 
 <section class="gal" id="gallery">
   <div class="wrap">
-    <div class="sec-head rv">
+    <div class="sec-head">
       <span class="label">Tap a photo to open it</span>
       <h2>Moments</h2>
       <span class="script">of us</span>
@@ -769,12 +778,17 @@ footer .label{color:var(--on-olive-dim)}
     list.concat(list).forEach(function(n,i){
       var b=document.createElement('button'); b.type='button';
       if(i>=list.length){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } else b.setAttribute('aria-label','Open photo: '+cap(n));
-      var im=new Image(); im.src='img/t'+n+'.jpg'; im.alt=''; im.loading='lazy'; im.decoding='async';
+      var im=new Image(); im.dataset.src='img/t'+n+'.jpg'; im.alt=''; im.decoding='async';
       b.appendChild(im); b.addEventListener('click',function(){openLB(all.indexOf(n),im)});
       el.appendChild(b);
     });
   }
   fill(document.getElementById('row1'),r1); fill(document.getElementById('row2'),r2);
+  function loadThumbs(){document.querySelectorAll('.row img[data-src]').forEach(function(im){im.src=im.dataset.src;im.removeAttribute('data-src')})}
+  if('IntersectionObserver' in window){
+    var gio=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting})){loadThumbs();gio.disconnect()}},{rootMargin:'2500px 0px'});
+    gio.observe(document.getElementById('gallery'));
+  } else loadThumbs();
 
   /* lightbox: zooms out of the tapped thumbnail */
   var lb=document.getElementById('lb'), ui=document.getElementById('lbui'), lbcap=document.getElementById('lbcap'), cur=0, big=null;
@@ -784,7 +798,7 @@ footer .label{color:var(--on-olive-dim)}
     if(big) big.alt=cap(all[cur]);
     if(!reduce&&lbcap.animate) lbcap.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:400,easing:'ease-out'});
   }
-  function fitRect(w,h){var mw=innerWidth*.92,mh=innerHeight*.68,s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-56,width:W,height:H}}
+  function fitRect(w,h){var sm=innerWidth<600,mw=innerWidth*(sm?.97:.92),mh=innerHeight*(sm?.7:.68),s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-56,width:W,height:H}}
   function place(el,r){el.style.left=r.left+'px';el.style.top=r.top+'px';el.style.width=r.width+'px';el.style.height=r.height+'px'}
   function openLB(i,thumb){
     cur=i; var r=thumb.getBoundingClientRect();
@@ -930,7 +944,7 @@ footer .label{color:var(--on-olive-dim)}
 
   // two kids drift together
   gsap.set('#k1,#k2',{clearProps:'transform'});
-  var kt=gsap.timeline({scrollTrigger:{trigger:'#kids',start:'top top',end:'+=110%',pin:true,scrub:.6}});
+  var kt=gsap.timeline({scrollTrigger:{trigger:'#kids',start:'top top',end:(innerWidth<600?'+=70%':'+=110%'),pin:true,scrub:(innerWidth<600?.25:.6)}});
   kt.fromTo('#k1',{x:0,y:40,xPercent:-96,yPercent:-50,rotation:0,scale:.9,opacity:0},{y:0,rotation:-5,scale:1,opacity:1,ease:'power2.out',duration:.6},0)
     .fromTo('#k2',{x:0,y:40,xPercent:-4,yPercent:-50,rotation:0,scale:.9,opacity:0},{y:0,rotation:5,scale:1,opacity:1,ease:'power2.out',duration:.6},0)
     .fromTo('#heart',{scale:0,opacity:0},{scale:1.25,opacity:1,ease:'back.out(3)',duration:.3},.45)
@@ -961,7 +975,7 @@ footer .label{color:var(--on-olive-dim)}
   });
 
   // film: the circle opens, words take turns
-  var ft=gsap.timeline({scrollTrigger:{trigger:'#film',start:'top top',end:'+=260%',pin:true,scrub:.6}});
+  var ft=gsap.timeline({scrollTrigger:{trigger:'#film',start:'top top',end:(innerWidth<600?'+=150%':'+=260%'),pin:true,scrub:(innerWidth<600?.25:.6)}});
   ft.fromTo('#filmMask',{clipPath:'circle(16% at 50% 50%)'},{clipPath:'circle(80% at 50% 50%)',ease:'power1.inOut',duration:1});
   var words=gsap.utils.toArray('#filmWords div');
   words.forEach(function(el,i){
@@ -971,7 +985,7 @@ footer .label{color:var(--on-olive-dim)}
 
   // proposal: prints land, then "She said yes"
   var cards=gsap.utils.toArray('#yes .card'), rots=[-9,7,-4,2], xs=[-34,30,-12,6];
-  var yt=gsap.timeline({scrollTrigger:{trigger:'#yes',start:'top top',end:'+=300%',pin:true,scrub:.6}});
+  var yt=gsap.timeline({scrollTrigger:{trigger:'#yes',start:'top top',end:(innerWidth<600?'+=160%':'+=300%'),pin:true,scrub:(innerWidth<600?.25:.6)}});
   cards.forEach(function(c,i){
     yt.fromTo(c,{yPercent:140,rotation:rots[i]*3,xPercent:xs[i]*1.5},{yPercent:0,rotation:rots[i],xPercent:xs[i],ease:'power3.out',duration:1},i*.8);
   });
