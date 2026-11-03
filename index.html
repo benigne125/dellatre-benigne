@@ -304,6 +304,9 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
 .lb-ui{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);z-index:152;display:flex;justify-content:center;gap:10px;color:var(--on-olive)}
 .lb-ui button{all:unset;cursor:pointer;height:44px;min-width:44px;padding:0 16px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(246,242,227,.35);font-family:var(--sans);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
 .lb-ui button:hover,.lb-ui button:focus-visible{background:rgba(246,242,227,.14)}
+.lb-cap{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);z-index:152;display:grid;gap:4px;justify-items:center;text-align:center;color:var(--on-olive);padding-left:var(--gl);padding-right:var(--gr);pointer-events:none}
+.lb-cap p{font-family:var(--serif);font-style:italic;font-size:clamp(1.15rem,2.6vw,1.45rem);line-height:1.3;max-width:34ch}
+.lb-cap span{font-family:var(--sans);font-size:.68rem;letter-spacing:.22em;color:var(--on-olive-dim)}
 
 /* ---------- wishes & prayers ---------- */
 .wishes{background:var(--olive);color:var(--on-olive);overflow:hidden;position:relative}
@@ -707,6 +710,7 @@ footer .label{color:var(--on-olive-dim)}
 </footer>
 
 <div class="lb" id="lb" hidden></div>
+<div class="lb-cap" id="lbcap" hidden aria-live="polite"><p id="lbtext"></p><span id="lbcount"></span></div>
 <div class="lb-ui" id="lbui" hidden>
   <button id="lbp" aria-label="Previous photo">←</button>
   <button id="lbc" aria-label="Close photo">Close</button>
@@ -734,10 +738,37 @@ footer .label{color:var(--on-olive-dim)}
   /* gallery rows */
   var r1=[28,31,32,33,35,36,38,39,41,42,30], r2=[43,26,19,15,17,10,6,49,14,4,13,16,34];
   var all=r1.concat(r2);
+  var captions={
+    28:'Hand in hand, among the cypress trees',
+    31:'Dancing through the garden',
+    32:'One spin, one smile',
+    33:'A quiet moment among the flowers',
+    35:'Joy you can\u2019t hold in',
+    36:'Walking into forever',
+    38:'Every path leads back to you',
+    39:'Hello again, my love',
+    41:'A toast to us',
+    42:'Roses for my favourite person',
+    30:'Laughing all the way',
+    43:'Celebrating the yes',
+    26:'Still water, full hearts',
+    19:'4 January 2026: the day she said yes',
+    15:'Christmas together',
+    17:'Taking our love to new heights',
+    10:'Evenings out together',
+    6:'Dinner date',
+    49:'Flowers for her',
+    14:'Sun, sea and the two of us',
+    4:'Adventure days',
+    13:'Paddling side by side',
+    16:'Just us',
+    34:'Forehead kisses and forever'
+  };
+  function cap(n){return captions[n]||'Delattre and B\u00e9nigne'}
   function fill(el,list){
     list.concat(list).forEach(function(n,i){
       var b=document.createElement('button'); b.type='button';
-      if(i>=list.length){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } else b.setAttribute('aria-label','Open photo');
+      if(i>=list.length){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } else b.setAttribute('aria-label','Open photo: '+cap(n));
       var im=new Image(); im.src='img/t'+n+'.jpg'; im.alt=''; im.loading='lazy'; im.decoding='async';
       b.appendChild(im); b.addEventListener('click',function(){openLB(all.indexOf(n),im)});
       el.appendChild(b);
@@ -746,13 +777,19 @@ footer .label{color:var(--on-olive-dim)}
   fill(document.getElementById('row1'),r1); fill(document.getElementById('row2'),r2);
 
   /* lightbox: zooms out of the tapped thumbnail */
-  var lb=document.getElementById('lb'), ui=document.getElementById('lbui'), cur=0, big=null;
-  function fitRect(w,h){var mw=innerWidth*.92,mh=innerHeight*.8,s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-24,width:W,height:H}}
+  var lb=document.getElementById('lb'), ui=document.getElementById('lbui'), lbcap=document.getElementById('lbcap'), cur=0, big=null;
+  function setCap(){
+    document.getElementById('lbtext').textContent=cap(all[cur]);
+    document.getElementById('lbcount').textContent=(cur+1)+' / '+all.length;
+    if(big) big.alt=cap(all[cur]);
+    if(!reduce&&lbcap.animate) lbcap.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:400,easing:'ease-out'});
+  }
+  function fitRect(w,h){var mw=innerWidth*.92,mh=innerHeight*.68,s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-56,width:W,height:H}}
   function place(el,r){el.style.left=r.left+'px';el.style.top=r.top+'px';el.style.width=r.width+'px';el.style.height=r.height+'px'}
   function openLB(i,thumb){
     cur=i; var r=thumb.getBoundingClientRect();
     big=new Image(); big.className='lb-img'; big.alt='Delattre and Bénigne'; big.src=thumb.src;
-    place(big,r); document.body.appendChild(big); lb.hidden=false; ui.hidden=false; document.body.style.overflow='hidden';
+    place(big,r); document.body.appendChild(big); lb.hidden=false; ui.hidden=false; lbcap.hidden=false; setCap(); document.body.style.overflow='hidden';
     var to=fitRect(thumb.naturalWidth||r.width,thumb.naturalHeight||r.height);
     if(!reduce){
       lb.animate([{opacity:0},{opacity:1}],{duration:300,fill:'both'});
@@ -763,14 +800,14 @@ footer .label{color:var(--on-olive-dim)}
     document.getElementById('lbc').focus();
   }
   function showLB(i){
-    cur=(i+all.length)%all.length;
+    cur=(i+all.length)%all.length; setCap();
     var im=new Image(); im.onload=function(){ if(!big) return; place(big,fitRect(im.naturalWidth,im.naturalHeight)); big.src=im.src;
       if(!reduce) big.animate([{opacity:0,transform:'scale(.97)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'}); };
     im.src='img/p'+all[cur]+'.jpg';
   }
   function closeLB(){
     if(!big) return; var b=big; big=null;
-    var end=function(){b.remove();lb.hidden=true;ui.hidden=true;document.body.style.overflow=''};
+    var end=function(){b.remove();lb.hidden=true;ui.hidden=true;lbcap.hidden=true;document.body.style.overflow=''};
     if(reduce){end();return}
     lb.animate([{opacity:1},{opacity:0}],{duration:280,fill:'both'});
     b.animate([{opacity:1,transform:'none'},{opacity:0,transform:'scale(.94)'}],{duration:280,easing:'ease-in'}).onfinish=end;
