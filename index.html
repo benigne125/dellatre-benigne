@@ -347,7 +347,18 @@ form{display:grid;gap:20px}
 .gw-head{display:grid;gap:6px;justify-items:center;text-align:center}
 .gw-head h3{font-family:var(--display);font-size:clamp(2rem,5vw,3rem);line-height:1;color:var(--on-olive)}
 .gw-head p{font-family:var(--sans);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--on-olive-dim)}
-.gw-cta{display:flex;justify-content:center}
+.gw-cta{display:grid;gap:16px;justify-items:center;text-align:center}
+.gw-cta p{font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--on-olive-dim);max-width:34ch}
+.row button{position:relative}
+.row .ov{position:absolute;inset:auto 0 0 0;padding:44px 14px 12px;display:grid;gap:4px;text-align:left;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.55) 35%,rgba(0,0,0,.82) 100%);pointer-events:none}
+.row .ov q{font-family:var(--serif);font-style:italic;font-size:.98rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.row .ov b{font-family:var(--script);font-weight:400;font-size:1.35rem;line-height:1.1;color:var(--leaf);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .ov.fresh{animation:ovIn .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes ovIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.row button.has-wish img{filter:brightness(.92)}
+.lb-cap .lb-wish{display:grid;gap:4px;justify-items:center;max-width:36ch}
+.lb-cap .lb-wish q{font-family:var(--serif);font-style:italic;font-size:clamp(1.1rem,2.4vw,1.35rem);line-height:1.35}
+.lb-cap .lb-wish b{font-family:var(--script);font-weight:400;font-size:1.6rem;color:var(--leaf);line-height:1.1}
 .gal .btn.solid:hover{background:transparent;color:var(--on-olive)}
 .wall-list{columns:3 260px;column-gap:14px}
 .wish{break-inside:avoid;margin:0 0 14px;background:rgba(246,242,227,.09);border:1px solid rgba(246,242,227,.22);border-radius:18px;padding:20px 20px 14px;display:grid;gap:12px}
@@ -652,16 +663,7 @@ footer .label{color:var(--on-olive-dim)}
     <div class="row rev" id="row2"></div>
   </div>
   <div class="wrap gal-wishes" id="gallery-wishes">
-    <div class="gw-head">
-      <h3>Wishes &amp; Prayers</h3>
-      <p>Messages from family and friends</p>
-    </div>
-    <div class="wall">
-      <div class="wall-list" id="wallList" aria-live="polite"></div>
-      <div class="wall-empty" id="wallEmpty" hidden><span class="sc">Be the first</span><p>No wishes yet. Write the first message for the couple.</p></div>
-      <button class="btn more" id="moreBtn" type="button" hidden>Show more wishes</button>
-    </div>
-    <div class="gw-cta"><a class="btn solid" href="#wishes">Leave a wish</a></div>
+    <div class="gw-cta"><p>Wishes and prayers from family and friends appear on these photos.</p><a class="btn solid" href="#wishes">Leave a wish</a></div>
   </div>
 </section>
 
@@ -682,9 +684,9 @@ footer .label{color:var(--on-olive-dim)}
           <div class="f"><label for="w-msg">Your message</label><textarea id="w-msg" maxlength="600" placeholder="Your wish or prayer for the couple"></textarea></div>
           <div class="hp" aria-hidden="true"><label for="w-web">Leave this empty</label><input type="text" id="w-web" tabindex="-1" autocomplete="off"></div>
           <p class="err" id="w-err" hidden></p>
-          <p class="ok" id="w-ok" hidden>Thank you! Your wish now appears under the photos. <a href="#gallery-wishes">See it in the gallery</a></p>
+          <p class="ok" id="w-ok" hidden>Thank you! Your wish now appears on a photo in the gallery. <a href="#gallery">See it</a></p>
           <div class="acts"><button class="btn ink" type="submit" id="w-send">Send wishes</button></div>
-          <p class="note">Your message will appear under the photo gallery for family and friends to read.</p>
+          <p class="note">Your message will appear on a photo in the gallery for family and friends to read.</p>
         </form>
       </div>
     </div>
@@ -733,7 +735,7 @@ footer .label{color:var(--on-olive-dim)}
 </footer>
 
 <div class="lb" id="lb" hidden></div>
-<div class="lb-cap" id="lbcap" hidden aria-live="polite"><span id="lbcount"></span></div>
+<div class="lb-cap" id="lbcap" hidden aria-live="polite"><div class="lb-wish" id="lbwish" hidden><q id="lbwq"></q><b id="lbwn"></b></div><span id="lbcount"></span></div>
 <div class="lb-ui" id="lbui" hidden>
   <button id="lbp" aria-label="Previous photo">←</button>
   <button id="lbc" aria-label="Close photo">Close</button>
@@ -763,7 +765,7 @@ footer .label{color:var(--on-olive-dim)}
   var all=r1.concat(r2);
   function fill(el,list){
     list.concat(list).forEach(function(n,i){
-      var b=document.createElement('button'); b.type='button';
+      var b=document.createElement('button'); b.type='button'; b.dataset.n=n;
       if(i>=list.length){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } else b.setAttribute('aria-label','Open photo');
       var im=new Image(); im.dataset.src='img/t'+n+'.jpg'; im.alt=''; im.decoding='async';
       b.appendChild(im); b.addEventListener('click',function(){openLB(all.indexOf(n),im)});
@@ -781,9 +783,11 @@ footer .label{color:var(--on-olive-dim)}
   var lb=document.getElementById('lb'), ui=document.getElementById('lbui'), lbcap=document.getElementById('lbcap'), cur=0, big=null;
   function setCap(){
     document.getElementById('lbcount').textContent=(cur+1)+' / '+all.length;
+    var w=wishFor(cur), lw=document.getElementById('lbwish');
+    if(w){document.getElementById('lbwq').textContent=w.message;document.getElementById('lbwn').textContent=w.name;lw.hidden=false}else lw.hidden=true;
     if(!reduce&&lbcap.animate) lbcap.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:400,easing:'ease-out'});
   }
-  function fitRect(w,h){var sm=innerWidth<600,mw=innerWidth*(sm?.97:.92),mh=innerHeight*(sm?.76:.76),s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-40,width:W,height:H}}
+  function fitRect(w,h){var sm=innerWidth<600,mw=innerWidth*(sm?.97:.92),mh=innerHeight*(wishFor(cur)?.6:.76),s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:Math.max(16,(innerHeight-H)/2-(wishFor(cur)?96:40)),width:W,height:H}}
   function place(el,r){el.style.left=r.left+'px';el.style.top=r.top+'px';el.style.width=r.width+'px';el.style.height=r.height+'px'}
   function openLB(i,thumb){
     cur=i; var r=thumb.getBoundingClientRect();
@@ -843,29 +847,25 @@ footer .label{color:var(--on-olive-dim)}
   var wasPlaying=false;
   document.addEventListener('visibilitychange',function(){ if(document.hidden){wasPlaying=!audio.paused;audio.pause()} else if(wasPlaying){playMusic()} });
 
-  /* wishes & prayers wall */
-  var API='/api/wishes', wall=document.getElementById('wallList'), empty=document.getElementById('wallEmpty'), moreBtn=document.getElementById('moreBtn');
-  var wishes=[], shown=8;
-  function when(t){try{return new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}catch(e){return ''}}
-  function card(w,fresh){
-    var a=document.createElement('article'); a.className='wish';
-    var p=document.createElement('p'); p.textContent='“'+w.message+'”';
-    var who=document.createElement('div'); who.className='who';
-    var b=document.createElement('b'); b.textContent=w.name;
-    var d=document.createElement('span'); d.textContent=when(w.t);
-    who.appendChild(b); who.appendChild(d); a.appendChild(p); a.appendChild(who);
-    if(fresh&&!reduce&&a.animate) a.animate([{opacity:0,transform:'translateY(24px) scale(.96)'},{opacity:1,transform:'none'}],{duration:700,easing:'cubic-bezier(.2,.8,.2,1)'});
-    return a;
-  }
-  function renderWall(){
-    wall.textContent='';
-    wishes.slice(0,shown).forEach(function(w){wall.appendChild(card(w))});
-    empty.hidden=wishes.length>0; moreBtn.hidden=wishes.length<=shown;
+  /* wishes & prayers: each wish is shown on a gallery photo (newest on the first photo) */
+  var API='/api/wishes', wishes=[];
+  function wishFor(k){var w=wishes[k];return w||null}
+  function paintWishes(freshId){
+    document.querySelectorAll('.row button').forEach(function(btn){
+      var k=all.indexOf(+btn.dataset.n), w=wishFor(k), ov=btn.querySelector('.ov');
+      if(!w){ if(ov) ov.remove(); btn.classList.remove('has-wish'); return; }
+      if(!ov){ ov=document.createElement('span'); ov.className='ov'; ov.appendChild(document.createElement('q')); ov.appendChild(document.createElement('b')); btn.appendChild(ov); }
+      if(ov.dataset.id!==w.id){
+        ov.dataset.id=w.id; ov.firstChild.textContent=w.message; ov.lastChild.textContent=w.name;
+        ov.classList.remove('fresh'); if(freshId&&!reduce){void ov.offsetWidth; ov.classList.add('fresh');}
+      }
+      btn.classList.add('has-wish');
+      if(btn.getAttribute('aria-hidden')!=='true') btn.setAttribute('aria-label','Open photo. Wish from '+w.name+': '+w.message);
+    });
   }
   fetch(API,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
-    .then(function(d){wishes=Array.isArray(d)?d:[];renderWall()})
-    .catch(function(){empty.hidden=false});
-  moreBtn.addEventListener('click',function(){shown+=8;renderWall()});
+    .then(function(d){wishes=Array.isArray(d)?d.slice(0,all.length):[];paintWishes()})
+    .catch(function(){});
   var wf=document.getElementById('wishForm'), wErr=document.getElementById('w-err'), wOk=document.getElementById('w-ok'), wSend=document.getElementById('w-send');
   wf.addEventListener('submit',function(e){
     e.preventDefault();
@@ -876,7 +876,7 @@ footer .label{color:var(--on-olive-dim)}
     fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,message:msg,website:document.getElementById('w-web').value})})
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j&&j.error||'error');return j})})
       .then(function(item){
-        if(item&&item.id){wishes.unshift(item);wall.insertBefore(card(item,true),wall.firstChild);empty.hidden=true;}
+        if(item&&item.id){wishes.unshift(item);wishes=wishes.slice(0,all.length);paintWishes(item.id);}
         document.getElementById('w-msg').value=''; wOk.hidden=false;
       })
       .catch(function(){
