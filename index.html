@@ -304,7 +304,7 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
 .lb-ui{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);z-index:152;display:flex;justify-content:center;gap:10px;color:var(--on-olive)}
 .lb-ui button{all:unset;cursor:pointer;height:44px;min-width:44px;padding:0 16px;display:grid;place-items:center;border-radius:999px;border:1px solid rgba(246,242,227,.35);font-family:var(--sans);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
 .lb-ui button:hover,.lb-ui button:focus-visible{background:rgba(246,242,227,.14)}
-.lb-cap{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);z-index:152;display:grid;gap:4px;justify-items:center;text-align:center;color:var(--on-olive);padding-left:var(--gl);padding-right:var(--gr);pointer-events:none}
+.lb-cap{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);z-index:152;display:grid;gap:4px;justify-items:center;text-align:center;color:var(--on-olive);padding-left:var(--gl);padding-right:var(--gr);pointer-events:none}
 .lb-cap p{font-family:var(--serif);font-style:italic;font-size:clamp(1.15rem,2.6vw,1.45rem);line-height:1.3;max-width:34ch}
 @media (max-width:600px){
   .gal{padding-block:56px 48px}
@@ -323,8 +323,9 @@ body.locked .names .ln>span,body.locked .fade-in{animation-play-state:paused}
 .wishes .sec-head .script{color:var(--leaf)}
 .wishes .sec-head .label{color:var(--on-olive-dim)}
 .wishes .sprig{left:-40px;bottom:-30px;width:260px;transform:rotate(-160deg);opacity:.3}
-.wish-grid{position:relative;z-index:1;max-width:1080px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,3.4vw,40px);align-items:start}
-.wish-form{background:var(--paper);color:var(--text);border-radius:24px;padding:clamp(22px,4vw,40px);box-shadow:0 40px 80px -50px rgba(20,26,8,.7);position:sticky;top:90px}
+.wish-grid{position:relative;z-index:1;max-width:620px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(20px,3.4vw,40px);align-items:start}
+.wish-form{background:var(--paper);color:var(--text);border-radius:24px;padding:clamp(22px,4vw,40px);box-shadow:0 40px 80px -50px rgba(20,26,8,.7)}
+.ok a{color:var(--ink);font-weight:500}
 .wish-form h3{font-family:var(--script);font-size:2.6rem;line-height:1.1;color:var(--ink)}
 .wish-form .intro{color:var(--muted);font-size:1.08rem;margin-top:-10px}
 form{display:grid;gap:20px}
@@ -342,7 +343,13 @@ form{display:grid;gap:20px}
 .btn[disabled]{opacity:.6;cursor:wait}
 .note{font-family:var(--sans);font-size:.78rem;color:var(--muted);font-weight:300;text-align:center}
 .wall{display:grid;gap:18px;min-width:0}
-.wall-list{columns:2 240px;column-gap:14px}
+.gal-wishes{margin-top:clamp(56px,8vw,96px);display:grid;gap:clamp(24px,4vw,36px)}
+.gw-head{display:grid;gap:6px;justify-items:center;text-align:center}
+.gw-head h3{font-family:var(--display);font-size:clamp(2rem,5vw,3rem);line-height:1;color:var(--on-olive)}
+.gw-head p{font-family:var(--sans);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--on-olive-dim)}
+.gw-cta{display:flex;justify-content:center}
+.gal .btn.solid:hover{background:transparent;color:var(--on-olive)}
+.wall-list{columns:3 260px;column-gap:14px}
 .wish{break-inside:avoid;margin:0 0 14px;background:rgba(246,242,227,.09);border:1px solid rgba(246,242,227,.22);border-radius:18px;padding:20px 20px 14px;display:grid;gap:12px}
 .wish p{font-size:1.14rem;line-height:1.55;font-style:italic;color:var(--on-olive);overflow-wrap:anywhere}
 .wish .who{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1px solid rgba(246,242,227,.18);padding-top:10px}
@@ -520,8 +527,8 @@ footer .label{color:var(--on-olive-dim)}
 
 <section class="kids" id="kids">
   <div class="head"><span class="label">Where it started</span></div>
-  <div class="pic k1" id="k1"><img src="img/t0.jpg" alt="Childhood photo"></div>
-  <div class="pic k2" id="k2"><img src="img/t5.jpg" alt="Childhood photo"></div>
+  <div class="pic k1" id="k1"><img src="img/baby-delattre.jpg" alt="Delattre as a baby"></div>
+  <div class="pic k2" id="k2"><img src="img/baby-benigne.jpg" alt="Bénigne as a baby"></div>
   <svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.8 8.2 3 4.5 6.6 4.5c2.2 0 3.6 1.2 5.4 3.2 1.8-2 3.2-3.2 5.4-3.2 3.6 0 5.8 3.7 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg>
   <div class="kcopy" id="kidsCopy">
     <h2>These kids are getting married</h2>
@@ -644,6 +651,18 @@ footer .label{color:var(--on-olive-dim)}
     <div class="row" id="row1"></div>
     <div class="row rev" id="row2"></div>
   </div>
+  <div class="wrap gal-wishes" id="gallery-wishes">
+    <div class="gw-head">
+      <h3>Wishes &amp; Prayers</h3>
+      <p>Messages from family and friends</p>
+    </div>
+    <div class="wall">
+      <div class="wall-list" id="wallList" aria-live="polite"></div>
+      <div class="wall-empty" id="wallEmpty" hidden><span class="sc">Be the first</span><p>No wishes yet. Write the first message for the couple.</p></div>
+      <button class="btn more" id="moreBtn" type="button" hidden>Show more wishes</button>
+    </div>
+    <div class="gw-cta"><a class="btn solid" href="#wishes">Leave a wish</a></div>
+  </div>
 </section>
 
 <section class="sec wishes" id="wishes">
@@ -663,15 +682,10 @@ footer .label{color:var(--on-olive-dim)}
           <div class="f"><label for="w-msg">Your message</label><textarea id="w-msg" maxlength="600" placeholder="Your wish or prayer for the couple"></textarea></div>
           <div class="hp" aria-hidden="true"><label for="w-web">Leave this empty</label><input type="text" id="w-web" tabindex="-1" autocomplete="off"></div>
           <p class="err" id="w-err" hidden></p>
-          <p class="ok" id="w-ok" hidden>Thank you! Your wish has been added to the wall.</p>
+          <p class="ok" id="w-ok" hidden>Thank you! Your wish now appears under the photos. <a href="#gallery-wishes">See it in the gallery</a></p>
           <div class="acts"><button class="btn ink" type="submit" id="w-send">Send wishes</button></div>
-          <p class="note">Your message will appear on this page for family and friends to read.</p>
+          <p class="note">Your message will appear under the photo gallery for family and friends to read.</p>
         </form>
-      </div>
-      <div class="wall">
-        <div class="wall-list" id="wallList" aria-live="polite"></div>
-        <div class="wall-empty" id="wallEmpty" hidden><span class="sc">Be the first</span><p>No wishes yet. Write the first message for the couple.</p></div>
-        <button class="btn more" id="moreBtn" type="button" hidden>Show more wishes</button>
       </div>
     </div>
   </div>
@@ -719,7 +733,7 @@ footer .label{color:var(--on-olive-dim)}
 </footer>
 
 <div class="lb" id="lb" hidden></div>
-<div class="lb-cap" id="lbcap" hidden aria-live="polite"><p id="lbtext"></p><span id="lbcount"></span></div>
+<div class="lb-cap" id="lbcap" hidden aria-live="polite"><span id="lbcount"></span></div>
 <div class="lb-ui" id="lbui" hidden>
   <button id="lbp" aria-label="Previous photo">←</button>
   <button id="lbc" aria-label="Close photo">Close</button>
@@ -747,37 +761,10 @@ footer .label{color:var(--on-olive-dim)}
   /* gallery rows */
   var r1=[28,31,32,33,35,36,38,39,41,42,30], r2=[43,26,19,15,17,10,6,49,14,4,13,16,34];
   var all=r1.concat(r2);
-  var captions={
-    28:'Hand in hand, among the cypress trees',
-    31:'Dancing through the garden',
-    32:'One spin, one smile',
-    33:'A quiet moment among the flowers',
-    35:'Joy you can\u2019t hold in',
-    36:'Walking into forever',
-    38:'Every path leads back to you',
-    39:'Hello again, my love',
-    41:'A toast to us',
-    42:'Roses for my favourite person',
-    30:'Laughing all the way',
-    43:'Celebrating the yes',
-    26:'Still water, full hearts',
-    19:'4 January 2026: the day she said yes',
-    15:'Christmas together',
-    17:'Taking our love to new heights',
-    10:'Evenings out together',
-    6:'Dinner date',
-    49:'Flowers for her',
-    14:'Sun, sea and the two of us',
-    4:'Adventure days',
-    13:'Paddling side by side',
-    16:'Just us',
-    34:'Forehead kisses and forever'
-  };
-  function cap(n){return captions[n]||'Delattre and B\u00e9nigne'}
   function fill(el,list){
     list.concat(list).forEach(function(n,i){
       var b=document.createElement('button'); b.type='button';
-      if(i>=list.length){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } else b.setAttribute('aria-label','Open photo: '+cap(n));
+      if(i>=list.length){ b.tabIndex=-1; b.setAttribute('aria-hidden','true'); } else b.setAttribute('aria-label','Open photo');
       var im=new Image(); im.dataset.src='img/t'+n+'.jpg'; im.alt=''; im.decoding='async';
       b.appendChild(im); b.addEventListener('click',function(){openLB(all.indexOf(n),im)});
       el.appendChild(b);
@@ -793,12 +780,10 @@ footer .label{color:var(--on-olive-dim)}
   /* lightbox: zooms out of the tapped thumbnail */
   var lb=document.getElementById('lb'), ui=document.getElementById('lbui'), lbcap=document.getElementById('lbcap'), cur=0, big=null;
   function setCap(){
-    document.getElementById('lbtext').textContent=cap(all[cur]);
     document.getElementById('lbcount').textContent=(cur+1)+' / '+all.length;
-    if(big) big.alt=cap(all[cur]);
     if(!reduce&&lbcap.animate) lbcap.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:400,easing:'ease-out'});
   }
-  function fitRect(w,h){var sm=innerWidth<600,mw=innerWidth*(sm?.97:.92),mh=innerHeight*(sm?.7:.68),s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-56,width:W,height:H}}
+  function fitRect(w,h){var sm=innerWidth<600,mw=innerWidth*(sm?.97:.92),mh=innerHeight*(sm?.76:.76),s=Math.min(mw/w,mh/h),W=w*s,H=h*s;return {left:(innerWidth-W)/2,top:(innerHeight-H)/2-40,width:W,height:H}}
   function place(el,r){el.style.left=r.left+'px';el.style.top=r.top+'px';el.style.width=r.width+'px';el.style.height=r.height+'px'}
   function openLB(i,thumb){
     cur=i; var r=thumb.getBoundingClientRect();
